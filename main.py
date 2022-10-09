@@ -35,6 +35,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 TODAY_DATE = date.today().strftime("%B %d, %Y")
+print('hello')
 
 gravatar = Gravatar(app,
                     size=90,
