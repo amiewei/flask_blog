@@ -15,7 +15,6 @@ from dotenv import load_dotenv
 app = Flask(__name__)
 
 load_dotenv('.env')
-# app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
 
 ckeditor = CKEditor(app)
@@ -247,14 +246,27 @@ def edit_post(post_id):
     return render_template("make-post.html", form=edit_form)
 
 
-@app.route("/delete/<int:post_id>")
+@app.route("/delete-post/<int:post_id>")
 @login_required
 @admin_only
 def delete_post(post_id):
     post_to_delete = BlogPost.query.get(post_id)
-    db.session.delete(post_to_delete)
-    db.session.commit()
+    print("delete post")
+    print(post_to_delete)
+    # db.session.delete(post_to_delete)
+    # db.session.commit()
     return redirect(url_for('get_all_posts'))
+
+@app.route("/delete-comment/<int:post_id>")
+@login_required
+@admin_only
+def delete_comment(post_id):
+    comment_to_delete = Comment.query.filter_by(post_id=post_id).first()
+    print("delete comment")
+    print(comment_to_delete)
+    db.session.delete(comment_to_delete)
+    db.session.commit()
+    return redirect(url_for('show_post', post_id=post_id))
 
 @app.errorhandler(404)
 def page_not_found(e):
